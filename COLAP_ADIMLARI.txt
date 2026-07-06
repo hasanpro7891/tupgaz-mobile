@@ -1,0 +1,44 @@
+GITHUB ACTIONS İLE APK (ÖNERİLEN - EN GARANTİLİ)
+=================================================
+Colab zaten 2 kere hata verdi. GitHub Actions çok daha kararlı.
+
+1. https://github.com/ adresinde bir repo oluştur (ör: tupgaz-mobile)
+2. Aşağıdaki kodları sırayla çalıştır:
+
+   cd C:\Users\212\Desktop\tüp
+   git init
+   git add .
+   git commit -m "ilk"
+   git remote add origin https://github.com/KULLANICI_ADIN/tupgaz-mobile.git
+   git push -u origin main
+
+3. GitHub'da repo sayfasına git → Actions sekmesi
+4. Soldan "Build APK" workflow'una tıkla → "Run workflow" → yeşil buton
+5. ~30 dk bekle, bitince workflow sayfasında "Artifacts" bölümü
+6. tupgaz-mobile-apk.zip indir → içinden .apk'yı çıkar → WhatsApp'tan gönder
+
+COLAB YEDEK (Actions olmazsa dene)
+====================================
+https://colab.research.google.com/ → File > New notebook
+Aşağıdaki TEK hücreyi kopyala yapıştır ▶
+
+from google.colab import files
+import zipfile, os, glob
+!sudo apt-get update -qq -y 2>/dev/null
+!sudo apt-get install -y -qq build-essential python3-dev openjdk-11-jdk-headless unzip wget 2>/dev/null
+!pip install -q --upgrade buildozer Cython==0.29.36 2>/dev/null
+!rm -rf ~/.buildozer
+uploaded = files.upload()
+for fn in uploaded.keys():
+    with zipfile.ZipFile(fn, 'r') as zf:
+        zf.extractall('/content/tupgaz')
+    os.remove(fn)
+for root, dirs, files in os.walk('/content/tupgaz'):
+    if 'main.py' in files:
+        os.chdir(root); break
+!buildozer --debug android debug 2>&1 | tee /tmp/build.log
+apk = glob.glob('bin/*.apk') or glob.glob('/content/**/*.apk', recursive=True)
+if apk:
+    print(f"APK: {apk[0]}"); files.download(apk[0])
+else:
+    print("HATA:"); !tail -80 /tmp/build.log
