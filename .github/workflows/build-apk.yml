@@ -19,7 +19,7 @@ jobs:
       - name: Install deps
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq libssl-dev zlib1g-dev ccache unzip git
+          sudo apt-get install -y -qq libssl-dev zlib1g-dev ccache unzip git libtool libltdl-dev autoconf automake
           pip install -q --upgrade buildozer Cython==0.29.36 setuptools virtualenv
       - name: Build APK
         timeout-minutes: 120
