@@ -20,7 +20,7 @@ android.api = 33
 android.minapi = 21
 android.ndk = 25c
 android.sdk = 33
-android.gradle_dependencies = []
+# android.gradle_dependencies =
 android.enable_p4a_flags = --window
 
 android.permissions = WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
