@@ -25,6 +25,8 @@ android.enable_p4a_flags = --window
 
 android.permissions = WRITE_EXTERNAL_STORAGE,READ_EXTERNAL_STORAGE
 
+android.accept_sdk_license = True
+
 android.primary_color = 8B0000
 android.accent_color = FFD700
 
