@@ -199,16 +199,30 @@ def run_migration():
     eski_yol = os.path.join(BASE_DIR, "data", "tupgaz.db")
     alt_eski_yol = os.path.join(BASE_DIR, "tupgaz.db")
 
+    db_path = eski_yol if os.path.exists(eski_yol) else alt_eski_yol if os.path.exists(alt_eski_yol) else None
+    if not db_path:
+        return False
+
+    try:
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='uygulama_ayarlari'")
+        if cursor.fetchone():
+            conn.close()
+            return False
+        conn.close()
+    except Exception:
+        pass
+
+    from data.db_init import init_db
+    yeni_yol = eski_yol + ".new"
+
     if os.path.exists(eski_yol) and os.path.getsize(eski_yol) > 0:
-        from data.db_init import init_db
-        yeni_yol = eski_yol + ".new"
         sonuc = migrate(eski_yol, yeni_yol)
         if sonuc:
             os.replace(yeni_yol, eski_yol)
             return True
     elif os.path.exists(alt_eski_yol) and os.path.getsize(alt_eski_yol) > 0:
-        from data.db_init import init_db
-        yeni_yol = eski_yol + ".new"
         sonuc = migrate(alt_eski_yol, yeni_yol)
         if sonuc:
             os.replace(yeni_yol, eski_yol)
