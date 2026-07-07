@@ -1,18 +1,32 @@
 import sys
 import os
+import traceback
+
 sys.dont_write_bytecode = True
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-
-from data.migration import run_migration
-run_migration()
+try:
+    from data.migration import run_migration
+    run_migration()
+except Exception:
+    pass
 
 try:
     import kivy
 except ImportError:
-    from main_tk import main as tk_main
-    tk_main()
+    try:
+        from main_tk import main as tk_main
+        tk_main()
+    except Exception:
+        pass
     sys.exit(0)
 
-from kivy_app import TupcularKraliKivyApp
-TupcularKraliKivyApp().run()
+try:
+    from kivy_app import TupcularKraliKivyApp
+    TupcularKraliKivyApp().run()
+except Exception:
+    try:
+        log_path = os.path.join(os.environ.get('EXTERNAL_STORAGE', '/storage/emulated/0'), 'tupgaz_hata.txt')
+        with open(log_path, 'w') as f:
+            traceback.print_exc(file=f)
+    except Exception:
+        pass

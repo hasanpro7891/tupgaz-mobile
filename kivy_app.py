@@ -5,7 +5,6 @@ from datetime import datetime
 os.environ['KIVY_NO_ARGS'] = '1'
 
 import kivy
-kivy.require('2.1.0')
 
 from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
